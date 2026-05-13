@@ -1,0 +1,26 @@
+#macOS
+.DS_Store
+
+#Processing application exports
+application.windows64/
+application.macosx/
+application.linux64/
+
+#Generic build folders
+build/
+out/
+
+#VSCode settings
+.vscode/
+
+#Temporary renders and export files
+
+tmp/
+temp/
+
+#Java artifacts
+*.class
+
+#Renders since they can be bulky
+
+exports/renders
