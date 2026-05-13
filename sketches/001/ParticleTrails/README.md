@@ -1,4 +1,6 @@
-#Particle Trails
+# Particle Trails:
+
+![Particle Trails Preview](../../exports/gifs/001_ParticleTrails.gif)
 
 Super simple sketch, we leverage the PVector class to generate position, velocity and acceleration for particles thar will randomly generate on the screen and bounce off its boundaries.
 
