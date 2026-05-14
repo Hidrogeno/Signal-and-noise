@@ -1,13 +1,12 @@
-ArrayList<Particle> particles;
+ArrayList<Particle> particles = new ArrayList<Particle>();
 
 void setup(){
     size(800,800);
     pixelDensity(2);
-    particles = new ArrayList<Particle>();
+    background(0);
     for(int i = 0; i < 100; i++){
         particles.add(new Particle());
     }
-    background(0);
 }
 void draw(){
     noStroke();
