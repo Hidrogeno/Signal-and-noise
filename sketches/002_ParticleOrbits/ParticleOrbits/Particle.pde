@@ -14,7 +14,7 @@ class Particle {
     }
     void update(){
         velocity.add(acceleration);
-        velocity.limit(5); // Limit the velocity to prevent it from getting too fast
+        velocity.limit(2); // Limit the velocity to prevent it from getting too fast
         position.add(velocity);
         acceleration.mult(0); // Reset acceleration after applying it 
     }

@@ -45,8 +45,8 @@ PVector calculateAttractionForce(Particle p) {
     // then we need to normalize it and multiply it by the magnitude of the force which is determined by the distance to the central attractor. 
     PVector force = PVector.sub(centralAttractor, p.position); // Vector pointing from particle to "origin" (not really the origin, but the central attractor)
     float distance = force.mag();
-    distance = constrain(distance, 5, 25);
-    float magnitude = 1/(distance*distance) * 50; // The closer the particle is to the central attractor, the stronger the force. The 5 is just a constant to make the force stronger.
+    distance = constrain(distance, 40, 80);
+    float magnitude = 80/(distance*distance); // The closer the particle is to the central attractor, the stronger the force. The 5 is just a constant to make the force stronger.
     force.normalize(); 
     force.mult(magnitude);
     return force;
