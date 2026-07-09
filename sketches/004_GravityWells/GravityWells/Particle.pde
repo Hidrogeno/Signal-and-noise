@@ -33,9 +33,9 @@ class Particle{
     void display(){
         // Set the particle color to white with some transparency
         pushStyle();
-        noStroke();
-        fill(particleColor);
-        ellipse(position.x, position.y, 4, 4);
+            noStroke();
+            fill(particleColor);
+            ellipse(position.x, position.y, 4, 4);
         popStyle();
     }
 }
