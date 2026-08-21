@@ -21,8 +21,8 @@ class Boid extends Body{
         this.cohesionStrength = cohesionStrength;
     }
 
-    void separate(ArrayList<Boid> boids){
-        // This function makes each boid separate from neighbors to avoid crowding
+    PVector separate(ArrayList<Boid> boids){
+        // This function returns separation steering force
         PVector steering = new PVector(0, 0);
         for(Boid other : boids){
             if(other != this){ // For all boids except itself
@@ -35,13 +35,11 @@ class Boid extends Body{
                 }
             }
         }
-        steering.mult(separationStrength); // Scale the steering force by the separation strength
-        steering.limit(maxForce); // Limit the steering force to the maximum force
-        applyForce(steering);
         lastForces[0] = steering.mag(); // Store the magnitude of the force applied for separation
+        return steering;
     }
-    void align(ArrayList<Boid> boids){
-        // This function alligns the boid's velocity to the average of it's neighbors'
+    PVector align(ArrayList<Boid> boids){
+        // This function returns alignment steering force
         PVector steering = new PVector(0, 0);
         PVector avgVelocity = new PVector(0, 0);
         int neighbors = 0; // Count of neighbors within perception radius
@@ -57,13 +55,12 @@ class Boid extends Body{
         if (neighbors > 0) {
             avgVelocity.div(neighbors); // Divide the sum of the velocities by the number of neighbors to get the average velocity
             steering = PVector.sub(avgVelocity, velocity); // Calculate steering force direction
-            steering.mult(alignmentStrength); // Scale by the alignment strength
-            steering.limit(maxForce);
-            applyForce(steering); // Apply the force
             lastForces[1] = steering.mag(); // Store the magnitude of the force applied for alignment
         }
+        return steering; 
     }
-    void cohere(ArrayList<Boid> boids){
+    PVector cohere(ArrayList<Boid> boids){
+        // This function returns cohesion steering force
         PVector steering = new PVector(0, 0);
         PVector avgPosition = new PVector(0, 0);
         int neighbors = 0; // Count of neighbors within perception radius
@@ -79,18 +76,31 @@ class Boid extends Body{
         if (neighbors > 0) {
             avgPosition.div(neighbors); // Divide the sum of the positions by the number of neighbors to get the average position
             steering = PVector.sub(avgPosition, position);
-            steering.mult(cohesionStrength); // Scale by the cohesion strength
-            steering.limit(maxForce);
-            applyForce(steering); // Apply the force
             lastForces[2] = steering.mag(); // Store the magnitude of the force applied for cohesion
         }
+        return steering;
     }
     void flock(ArrayList<Boid> boids){
-        lastForces = new float[]{0, 0, 0}; // Reset the last forces array at the beginning of each flocking step
         // This function combines the three flocking behaviors into one
-        separate(boids);
-        align(boids);
-        cohere(boids);
+        lastForces = new float[]{0, 0, 0}; // Reset the last forces array at the beginning of each flocking step
+        PVector totalForce = new PVector(0, 0); // Vector to store all the forces 
+        PVector separationForce = separate(boids); // Get the separation force
+        PVector alignmentForce = align(boids); // Get the alignment force
+        PVector cohesionForce = cohere(boids); // Get the cohesion force
+
+        // Scale the forces by their respective strengths and limit them to the maximum force
+        separationForce.mult(separationStrength);
+        separationForce.limit(maxForce);
+        alignmentForce.mult(alignmentStrength);
+        alignmentForce.limit(maxForce);
+        cohesionForce.mult(cohesionStrength);
+        cohesionForce.limit(maxForce);
+
+        // Add the forces to the total force vector
+        totalForce.add(separationForce);
+        totalForce.add(alignmentForce);
+        totalForce.add(cohesionForce);
+        applyForce(totalForce);
     }
     void setBoidSize(float size){
         boidSize = size;
