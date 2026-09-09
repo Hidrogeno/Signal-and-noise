@@ -35,7 +35,6 @@ class Boid extends Body{
                 }
             }
         }
-        lastForces[0] = steering.mag(); // Store the magnitude of the force applied for separation
         return steering;
     }
     PVector align(ArrayList<Boid> boids){
@@ -55,7 +54,6 @@ class Boid extends Body{
         if (neighbors > 0) {
             avgVelocity.div(neighbors); // Divide the sum of the velocities by the number of neighbors to get the average velocity
             steering = PVector.sub(avgVelocity, velocity); // Calculate steering force direction
-            lastForces[1] = steering.mag(); // Store the magnitude of the force applied for alignment
         }
         return steering; 
     }
@@ -76,7 +74,6 @@ class Boid extends Body{
         if (neighbors > 0) {
             avgPosition.div(neighbors); // Divide the sum of the positions by the number of neighbors to get the average position
             steering = PVector.sub(avgPosition, position);
-            lastForces[2] = steering.mag(); // Store the magnitude of the force applied for cohesion
         }
         return steering;
     }
@@ -100,6 +97,13 @@ class Boid extends Body{
         totalForce.add(separationForce);
         totalForce.add(alignmentForce);
         totalForce.add(cohesionForce);
+
+        // Update the lastForces array
+        lastForces[0] = separationForce.mag();
+        lastForces[1] = alignmentForce.mag();
+        lastForces[2] = cohesionForce.mag();
+
+        // Apply the total force to the boid
         applyForce(totalForce);
     }
     void setBoidSize(float size){
