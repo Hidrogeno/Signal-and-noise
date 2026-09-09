@@ -6,7 +6,7 @@ class Boid extends Body{
     float cohesionStrength = 1;
     float boidSize = 4;
     color boidColor = color(255, 255, 255, 100);
-    float [] lastForces; // Array to store the last forces applied for separation, alignment, and cohesion
+    float [] lastForces = new float[]{0, 0, 0}; // Array to store the last forces applied for separation, alignment, and cohesion
 
     Boid(){
         // Basic constructor, just calls the super constructor of the Body class
@@ -22,7 +22,7 @@ class Boid extends Body{
     }
 
     PVector separate(ArrayList<Boid> boids){
-        // This function returns separation steering force
+        // This function returns separation steering force before weighting
         PVector steering = new PVector(0, 0);
         for(Boid other : boids){
             if(other != this){ // For all boids except itself
@@ -38,7 +38,7 @@ class Boid extends Body{
         return steering;
     }
     PVector align(ArrayList<Boid> boids){
-        // This function returns alignment steering force
+        // This function returns alignment steering force before weighting
         PVector steering = new PVector(0, 0);
         PVector avgVelocity = new PVector(0, 0);
         int neighbors = 0; // Count of neighbors within perception radius
@@ -58,7 +58,7 @@ class Boid extends Body{
         return steering; 
     }
     PVector cohere(ArrayList<Boid> boids){
-        // This function returns cohesion steering force
+        // This function returns cohesion steering force before weighting
         PVector steering = new PVector(0, 0);
         PVector avgPosition = new PVector(0, 0);
         int neighbors = 0; // Count of neighbors within perception radius
@@ -79,7 +79,12 @@ class Boid extends Body{
     }
     void flock(ArrayList<Boid> boids){
         // This function combines the three flocking behaviors into one
-        lastForces = new float[]{0, 0, 0}; // Reset the last forces array at the beginning of each flocking step
+        
+        // Reset the last forces array at the beginning of each flocking step
+        lastForces[SEPARATION] = 0;
+        lastForces[ALIGNMENT] = 0;
+        lastForces[COHESION] = 0;
+        
         PVector totalForce = new PVector(0, 0); // Vector to store all the forces 
         PVector separationForce = separate(boids); // Get the separation force
         PVector alignmentForce = align(boids); // Get the alignment force
@@ -99,9 +104,9 @@ class Boid extends Body{
         totalForce.add(cohesionForce);
 
         // Update the lastForces array
-        lastForces[0] = separationForce.mag();
-        lastForces[1] = alignmentForce.mag();
-        lastForces[2] = cohesionForce.mag();
+        lastForces[SEPARATION] = separationForce.mag();
+        lastForces[ALIGNMENT] = alignmentForce.mag();
+        lastForces[COHESION] = cohesionForce.mag();
 
         // Apply the total force to the boid
         applyForce(totalForce);
@@ -114,12 +119,12 @@ class Boid extends Body{
     }
     void lastActionColor(){
         // This function sets the boid's color based on the last dominant action (separation, alignment, or cohesion)
-        float maxLastForce = max(lastForces[0], max(lastForces[1], lastForces[2]));
-        if(maxLastForce > lastForces[1] && maxLastForce > lastForces[2]){
+        float maxLastForce = max(lastForces[SEPARATION], max(lastForces[ALIGNMENT], lastForces[COHESION]));
+        if(maxLastForce > lastForces[ALIGNMENT] && maxLastForce > lastForces[COHESION]){
             boidColor = color(255, 0, 0, 100); // Red for separation
-        } else if(maxLastForce > lastForces[0] && maxLastForce > lastForces[2]){
+        } else if(maxLastForce > lastForces[SEPARATION] && maxLastForce > lastForces[COHESION]){
             boidColor = color(0, 255, 0, 100); // Green for alignment
-        } else if(maxLastForce > lastForces[0] && maxLastForce > lastForces[1]){
+        } else if(maxLastForce > lastForces[SEPARATION] && maxLastForce > lastForces[ALIGNMENT]){
             boidColor = color(0, 0, 255, 100); // Blue for cohesion
         }
     }
