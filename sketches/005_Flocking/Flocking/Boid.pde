@@ -126,6 +126,8 @@ class Boid extends Body{
             boidColor = color(0, 255, 0, 100); // Green for alignment
         } else if(maxLastForce > lastForces[SEPARATION] && maxLastForce > lastForces[ALIGNMENT]){
             boidColor = color(0, 0, 255, 100); // Blue for cohesion
+        } else {
+            boidColor = color(255, 255, 255, 100); // White for no dominant action
         }
     }
     void display(){
