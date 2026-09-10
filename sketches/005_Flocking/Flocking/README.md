@@ -6,6 +6,8 @@ In this sketch we explore more robust physics arquitechture by renaming the part
 
 Work in progress, this sketch is not finalized.
 
+Wind is to be added on an upcoming commit.
+
 ## Concepts:
 - Attraction, repulsion and direction correction
 - Inheritance
