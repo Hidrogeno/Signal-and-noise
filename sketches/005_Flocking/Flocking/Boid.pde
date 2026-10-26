@@ -1,7 +1,9 @@
 class Boid extends Body{
-    float perceptionRadius = 80;
-    float maxForce = 0.2;
-    float separationStrength = 1;
+    float maxForce = MAX_FORCE;
+    float perceptionRadius = PERCEPTION_RADIUS;
+    float windStrength = WIND_STRENGTH;
+    
+    float separationStrength = 1.5;
     float alignmentStrength = 0.3;
     float cohesionStrength = 1;
     float boidSize = 4;
@@ -77,7 +79,8 @@ class Boid extends Body{
         }
         return steering;
     }
-    void flock(ArrayList<Boid> boids){
+    
+    void flock(ArrayList<Boid> boids, PVector wind){
         // This function combines the three flocking behaviors into one
         
         // Reset the last forces array at the beginning of each flocking step
@@ -89,6 +92,7 @@ class Boid extends Body{
         PVector separationForce = separate(boids); // Get the separation force
         PVector alignmentForce = align(boids); // Get the alignment force
         PVector cohesionForce = cohere(boids); // Get the cohesion force
+        PVector windForce = wind.copy(); // Copy the wind vector
 
         // Scale the forces by their respective strengths and limit them to the maximum force
         separationForce.mult(separationStrength);
@@ -97,11 +101,14 @@ class Boid extends Body{
         alignmentForce.limit(maxForce);
         cohesionForce.mult(cohesionStrength);
         cohesionForce.limit(maxForce);
+        // wind force already has strength applied
+        windForce.limit(maxForce);
 
         // Add the forces to the total force vector
         totalForce.add(separationForce);
         totalForce.add(alignmentForce);
         totalForce.add(cohesionForce);
+        totalForce.add(windForce);
 
         // Update the lastForces array
         lastForces[SEPARATION] = separationForce.mag();
