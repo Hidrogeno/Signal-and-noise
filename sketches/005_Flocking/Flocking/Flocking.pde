@@ -1,5 +1,4 @@
 ArrayList<Boid> boids = new ArrayList<Boid>();
-color boidColor;
 WindField wind;
 void setup() {
     float separationStrength = 1.5;
@@ -15,13 +14,14 @@ void setup() {
 }
 
 void draw(){
-    boidColor = customBoidColor();
+    
     PVector windVector;
     fill(0, 50);
     rect(0, 0, width, height);
     for (Boid b : boids) {
+        color boidColor = customBoidColor(b.position);
         windVector = wind.lookup(b.position);
-        if(mousePressed){
+        if(keyPressed){
             windVector = new PVector(0,0); // Apply no wind if pressed
         }
         b.flock(boids, windVector);
@@ -34,11 +34,12 @@ void draw(){
     }
 }
 
-color customBoidColor() {
+color customBoidColor(PVector pos) {
+    float t = sin(frameCount * 0.035 + pos.y*0.01);
     return color(
-        map(sin(frameCount * 0.035), -1, 1, 142, 25), // R
-        map(sin(frameCount * 0.035), -1, 1, 3, 25), // G
-        map(sin(frameCount * 0.035), -1, 1, 32, 113), // B
+        map(t, -1, 1, 142, 25), // R
+        map(t, -1, 1, 3, 25), // G
+        map(t, -1, 1, 32, 113), // B
         100 // Alpha
     );
 }

@@ -28,7 +28,7 @@ float resolutionX, resolutionY;
         }
     }
     PVector windDirection(PVector position){
-        PVector center = new PVector(width/2 +noise(frameCount*0.01)*50, height/2 +noise(frameCount*0.01)*50);
+        PVector center = new PVector(width/2 +noise(frameCount*0.1)*50, height/2 +noise(frameCount*0.01)*50);
         PVector radial = PVector.sub(position, center);
         PVector dir = new PVector(-radial.y, radial.x);
         dir.add(PVector.random2D());
@@ -41,6 +41,7 @@ float resolutionX, resolutionY;
     PVector lookup(PVector position) {
         int column = (int)constrain(position.x / resolutionX, 0, cols - 1);
         int row = (int)constrain(position.y / resolutionY, 0, rows - 1);
+        field[column][row] = windDirection(position).mult(windMagnitude(position));
         return field[column][row].copy();
   }
 }
