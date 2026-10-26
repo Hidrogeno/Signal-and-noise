@@ -6,7 +6,9 @@ In this sketch we explore more robust physics arquitechture by renaming the part
 
 Work in progress, this sketch is not finalized.
 
-Wind is to be added on an upcoming commit.
+Wind added, gives an additional force is a keyboard button is not pressed.
+
+Added coloring in bands and waves to make more visually appealing.
 
 ## Concepts:
 - Attraction, repulsion and direction correction
